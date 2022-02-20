@@ -11,14 +11,13 @@
             'interests',
             (response) => {
                 let interests = JSON.parse(response).data;
-                let ddl = $('<select/>').attr('multiple', true).attr('id', 'interests');
+                let ddl = $('#interests');
                 let options = interests.map(
                         (interest) => $('<option/>').text(interest.interest)
                                                     .attr('value', interest.id)
                     );
 
                 ddl.append(options);
-                $('#divInterests').append(ddl);
             }
         );
 
@@ -26,7 +25,7 @@
             'languages',
             (response) => {
                 let languages = JSON.parse(response).data;
-                let ddl = $('<select/>').attr('id', 'languages');
+                let ddl = $('#languages');
                 let options = languages.map(
                         (language) => $('<option/>').text(language.language)
                                                     .attr('value', language.id)
@@ -39,12 +38,21 @@
                 );
 
                 ddl.append(options);
-                $('#divLanguages').append(ddl);
             }
         );
 
         loadPersons();
     });
+
+    function alertMsg(type, msg) {
+        let popup = $('#divMsg');
+
+        popup.removeClass('alert-danger')
+            .removeClass('alert-success')
+            .addClass(type)
+            .text(msg)
+            .show();
+    }
 
     function loadPersons() {
         getCollectionOf(
@@ -66,9 +74,6 @@
                     options = persons.map(createPersonOption)
                 }
 
-                ddl = ddl.attr('size', Math.min(10, options.length + 1));
-                
-                $('#divPersons').append(ddl);
                 ddl.append(options);
             }
         );
@@ -184,11 +189,14 @@
                 if (parsed.data) {
                     $('#persons').append(createPersonOption(parsed.data));
 
-                    sendMail(parsed.data.id);
                     clearControls();
                     loadPersons();
+
+                    alertMsg('alert-success', 'Created');
+
+                    sendMail(parsed.data.id);
                 } else {
-                    console.log(parsed.error);
+                    alertMsg('alert-danger', parsed.error);
                 }
             },
             error: (response) => {
@@ -220,11 +228,11 @@
                 let parsed = JSON.parse(response);
 
                 if (parsed.data) {
-                    console.log('Person updated');
+                    alertMsg('alert-success', 'Updated');
 
                     loadPersons();
                 } else {
-                    console.log(parsed.error);
+                    alertMsg('alert-danger', parsed.error);
                 }
             },
             error: (response) => {
@@ -250,11 +258,11 @@
                 let parsed = JSON.parse(response);
 
                 if (parsed.message) {
-                    console.log(parsed.message);
+                    alertMsg('alert-success', parsed.message)
                     clearControls();
                     loadPersons();
                 } else {
-                    console.log(parsed.error);
+                    alertMsg('alert-success', parsed.error)
                 }
             },
             error: (response) => {
@@ -266,31 +274,61 @@
     }
 
 </script>
-
-<div id='divPersons'>
-    <select id='persons'></select>
+<div class='row'>
+    <div id='divMsg' onclick="$(this).hide();" class='col alert'></div>
 </div>
+<div class='row'>
+    <div id='divPersons' class='col-md-4'>
+        <form>
+            <div class='form-group'>
+                <label for="persons">Existing Persons</label>
+                <select id='persons' size="20" class='form-control'></select>
+            </div>
+        </form>
+    </div>
+    <div id='divPersonCreateEdit' class='col-md-8'>
+        <form method="POST">
+            <div class='form-group'>
+                <label for="languages">Language</label>
+                <select id="languages" class='form-control'></select>
+            </div>
+            <div class='form-group'>
+                <label for="interests">Interests</label>
+                <select multiple id="interests" class='form-control'></select>
+            </div>
+            <div class='form-group'>
+                <label for="first_name">First Name</label>
+                <input id='first_name' placeholder="First Name" class='form-control'></input>
+            </div>
+            <div class='form-group'>
+                <label for="last_name">Last Name</label>
+                <input id='last_name' placeholder="Last Name" class='form-control'></input>
+            </div>
+            <div class='form-group'>
+                <label for="cell_number">Cell Number</label>
+                <input id='cell_number' placeholder="Cell Number" class='form-control'></input>
+            </div>
+            <div class='form-group'>
+                <label for="id_number">ID Number</label>
+                <input id='id_number' placeholder="ID Number" class='form-control'></input>
+            </div>
+            <div class='form-group'>
+                <label for="email">Email Address</label>
+                <input type='email' id='email' placeholder="Email Address" class='form-control'></input>
+            </div>
 
-<div id='divPersonCreateEdit'>
-    <form method="POST">
-        <div>Language</div><div id="divLanguages"></div>
-        <div>Interests</div><div id="divInterests"></div>
-        <div>First Name</div><div><input id='first_name' /></div>
-        <div>Last Name</div><div><input id='last_name' /></div>
-        <div>Cell Number</div><div><input id='cell_number' /></div>
-        <div>ID Number</div><div><input id='id_number' /></div>
-        <div>Email Address</div><div><input id='email' /></div>
-        <button id='create' onclick="return createPerson();">
-            Create
-        </button>
-        <button id='new' onclick="clearControls(); return false;">
-            New
-        </button>
-        <button id='update' onclick="return updatePerson();">
-            Update
-        </button>
-        <button id='delete' onclick="return deletePerson();">
-            Delete
-        </button>
-    </form>
+            <button id='create' onclick="return createPerson();" class='btn btn-secondary'>
+                Create
+            </button>
+            <button id='new' onclick="clearControls(); return false;" class='btn btn-secondary'>
+                New
+            </button>
+            <button id='update' onclick="return updatePerson();" class='btn btn-secondary'>
+                Update
+            </button>
+            <button id='delete' onclick="return deletePerson();" class='btn btn-secondary'>
+                Delete
+            </button>
+        </form>
+    </div>
 </div>

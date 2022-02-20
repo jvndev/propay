@@ -25,8 +25,18 @@
     }
 </script>
 
-<form id='frmLogin'>
-    <input type="text" id="username"></input>
-    <input type="text" id="password"></input>
-    <button onclick="return login();">Login</button>
-</form>
+    <form id='frmLogin'>
+        <div class='row'>
+            <div class='col'>
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Username"></input>
+            </div>
+            <div class='col'>
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Password"></input>
+            </div>
+            <div class='col'>
+                <button onclick="return login();">Login</button>
+            </div>
+        </div>
+    </form>
