@@ -1,0 +1,31 @@
+###############################################
+#         === Configuration File ===          #
+###############################################
+# The format is "Key" <whitespace> "Value".   #
+# Comment lines with "#".                     #
+###############################################
+
+### Do NOT change ###
+VAR_USER_SESSION user
+JSON_MESSAGE message
+JSON_DATA data
+JSON_PARMS parms
+JSON_ERROR error
+#####################
+
+### DB ###
+DB_HOST localhost
+DB_PORT 3306
+DB_SCHEMA propay
+DB_USER propay
+DB_PASSWORD "pr0p@y"
+
+### SMTP ###
+SMTP_HOST smtp.mail.yahoo.com
+SMTP_PORT 465
+SMTP_CONNECTION ssl
+SMTP_USER propay_jvndev@yahoo.com
+SMTP_PASSWORD "exgveauysuezifoo"
+SMTP_FROM_NAME admin
+SMTP_FROM_ADDRESS propay_jvndev@yahoo.com
+SMTP_SUBJECT "Details registered on system."
