@@ -1,19 +1,8 @@
-/*
-	TODO
-    - indexing
-    - foreign key constraints
-    - unique constraints
-*/
-
-/*
 CREATE SCHEMA propay;
+
 CREATE USER propay@localhost IDENTIFIED BY 'pr0p@y';
 GRANT ALL PRIVILEGES ON propay.* TO propay@localhost;
 FLUSH PRIVILEGES;
-*/
-
-DROP SCHEMA propay;
-CREATE SCHEMA propay;
 
 USE `propay`;
 
