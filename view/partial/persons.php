@@ -57,6 +57,10 @@
                 ? "20" + ymd[1] 
                 : "19" + ymd[1];
             $('#year').val(y);
+        } else {
+            $('#day').val('');
+            $('#month').val('');
+            $('#year').val('');
         }
     }
 
@@ -99,6 +103,9 @@
         $('#first_name').val('');
         $('#last_name').val('');
         $('#id_number').val('').removeAttr('readonly');
+        $('#year').val('');
+        $('#month').val('');
+        $('#day').val('');
         $('#cell_number').val('');
         $('#email').val('');
         $('#languages').val(0);
