@@ -6,6 +6,7 @@
 
     $(() => {
         clearControls();
+        clearValidation();
 
         getCollectionOf(
             'interests',
@@ -166,8 +167,39 @@
         return false;
     }
 
+    function clearValidation() {
+        $('div[id^="err"]').each(function () {
+            $(this).hide();
+        });
+    }
+
+    function validate() {
+        clearValidation();
+
+        return [
+            ['languages', v => !!v],
+            ['interests', v => v.length],
+            ['first_name', v => !!v],
+            ['last_name', v => !!v],
+            ['cell_number', v => !!v && /^\d{10}$/.exec(v)],
+            ['id_number', v => !!v && /^\d{13}$/.exec(v)],
+            ['email', v => !!v && /^\w+@\w+(\.\w+)+$/.exec(v)],
+        ].map(arr => {
+            let ctrl = arr[0];
+            let validated = arr[1]($('#'+ctrl).val());
+
+            if (!validated) {
+                $('#err_'+ctrl).show();
+            } else {
+                $('#err_'+ctrl).hide();
+            }
+
+            return validated;
+        }).reduce((p, c) => p && c, true);
+    }
+
     function createPerson() {
-        $.ajax({
+        validate() && $.ajax({
             accepts: 'application/json',
             url: './src/ajax.php',
             data: {
@@ -208,7 +240,7 @@
     }
 
     function updatePerson() {
-        $.ajax({
+        validate() && $.ajax({
             accepts: 'application/json',
             url: './src/ajax.php',
             data: {
@@ -278,7 +310,7 @@
     <div id='divMsg' onclick="$(this).hide();" class='col alert'></div>
 </div>
 <div class='row'>
-    <div id='divPersons' class='col-md-4'>
+    <div class='col-md-4'>
         <form>
             <div class='form-group'>
                 <label for="persons">Existing Persons</label>
@@ -286,35 +318,42 @@
             </div>
         </form>
     </div>
-    <div id='divPersonCreateEdit' class='col-md-8'>
+    <div class='col-md-8'>
         <form method="POST">
             <div class='form-group'>
                 <label for="languages">Language</label>
                 <select id="languages" class='form-control'></select>
+                <div id="err_languages" class="alert-danger">Please select a language</div>
             </div>
             <div class='form-group'>
-                <label for="interests">Interests</label>
+                <label for="interests">Interests (hold "Ctrl" to select multiple)</label>
                 <select multiple id="interests" class='form-control'></select>
+                <div id="err_interests" class="alert-danger">Please select one or more interests</div>
             </div>
             <div class='form-group'>
                 <label for="first_name">First Name</label>
                 <input id='first_name' placeholder="First Name" class='form-control'></input>
+                <div id="err_first_name" class="alert-danger">Invalid first name</div>
             </div>
             <div class='form-group'>
                 <label for="last_name">Last Name</label>
                 <input id='last_name' placeholder="Last Name" class='form-control'></input>
+                <div id="err_last_name" class="alert-danger">Invalid last name</div>
             </div>
             <div class='form-group'>
                 <label for="cell_number">Cell Number</label>
                 <input id='cell_number' placeholder="Cell Number" class='form-control'></input>
+                <div id="err_cell_number" class="alert-danger">Invalid cell number</div>
             </div>
             <div class='form-group'>
                 <label for="id_number">ID Number</label>
                 <input id='id_number' placeholder="ID Number" class='form-control'></input>
+                <div id="err_id_number" class="alert-danger">Invalid ID number</div>
             </div>
             <div class='form-group'>
                 <label for="email">Email Address</label>
                 <input type='email' id='email' placeholder="Email Address" class='form-control'></input>
+                <div id="err_email" class="alert-danger">Invalid email address</div>
             </div>
 
             <button id='create' onclick="return createPerson();" class='btn btn-secondary'>
