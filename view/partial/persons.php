@@ -45,6 +45,21 @@
         loadPersons();
     });
 
+    function idNumberChanged() {
+        let id = $('#id_number').val();
+
+        if (re = /^(\d{6})/.exec(id)) {
+            let ymd = /(\d{2})(\d{2})(\d{2})/.exec(re[0]);
+
+            $('#day').val(ymd[3]);
+            $('#month').val(ymd[2]);
+            let y = (new Date().getFullYear()+"").substr(2) >= ymd[1]
+                ? "20" + ymd[1] 
+                : "19" + ymd[1];
+            $('#year').val(y);
+        }
+    }
+
     function alertMsg(type, msg) {
         let popup = $('#divMsg');
 
@@ -147,6 +162,7 @@
                 $('#first_name').val(person.firstName);
                 $('#last_name').val(person.lastName);
                 $('#id_number').val(person.idNumber).attr('readonly', true);
+                idNumberChanged();
                 $('#cell_number').val(person.cellNumber);
                 $('#email').val(person.email);
                 $('#languages').val(person.language.id);
@@ -347,8 +363,16 @@
             </div>
             <div class='form-group'>
                 <label for="id_number">ID Number</label>
-                <input id='id_number' placeholder="ID Number" class='form-control'></input>
+                <input id='id_number' placeholder="ID Number" class='form-control' onkeyup="idNumberChanged();"></input>
                 <div id="err_id_number" class="alert-danger">Invalid ID number</div>
+            </div>
+            <div class='form-group form-inline'>
+                <label for="day">Day&nbsp;</label>
+                <input id='day' class='form-control' style="width: 4em;" readonly></input>
+                <label for="month">&nbsp;Month&nbsp;</label>
+                <input id='month' class='form-control' style="width: 4em;" readonly></input>
+                <label for="year">&nbsp;Year&nbsp;</label>
+                <input id='year' class='form-control' style="width: 8em;" readonly></input>
             </div>
             <div class='form-group'>
                 <label for="email">Email Address</label>
